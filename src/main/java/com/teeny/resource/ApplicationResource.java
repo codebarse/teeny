@@ -34,6 +34,6 @@ public class ApplicationResource {
 	@GET
 	@Path("/noHello")
 	public Saying dontSayHello() {
-		return new Saying(1, "Fuck off!");
+		return new Saying(1, "Fish off!");
 	}
 }
