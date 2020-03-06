@@ -1,6 +1,3 @@
-template: Hello, %s!
-defaultName: Stranger
-
 # Database settings.
 database:
   # the name of the JDBC driver, mysql in our case

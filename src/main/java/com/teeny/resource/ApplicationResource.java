@@ -3,38 +3,25 @@ package com.teeny.resource;
 import com.codahale.metrics.annotation.Timed;
 import com.teeny.application.Saying;
 import com.teeny.dao.TeenyUrlDAO;
-import com.teeny.models.TeenyUrl;
+import com.teeny.model.TeenyUrl;
 import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 import java.util.Optional;
 
-@Path("/hello-world")
+@Path("/teeny")
 @Produces(MediaType.APPLICATION_JSON)
 public class ApplicationResource {
 	
-	private final String template;
-	private final String defaultName;
 	private TeenyUrlDAO teenyDAO;
 	
-	public ApplicationResource(String template, String defaultName, TeenyUrlDAO teenyDAO) {
-		this.template = template;
-		this.defaultName = defaultName;
+	public ApplicationResource(TeenyUrlDAO teenyDAO) {
 		this.teenyDAO = teenyDAO;
-	}
-	
-	@GET
-	@Timed
-	@Path("/hello")
-	public Saying sayHello(@QueryParam("name") Optional<String> name) {
-		final String value = String.format(template, name.orElse(defaultName));
-		return new Saying(1, value);
-		
 	}
 	
 	@GET
@@ -42,10 +29,37 @@ public class ApplicationResource {
 	public Saying dontSayHello() {
 		return new Saying(1, "Fish off!");
 	}
-
+	
+	/**
+	 * Returns all
+	 * teeny url stored in the database.
+	 *
+	 * @return list of TeenyUrl of all urls stored in the database.
+	 */
 	@GET
+	@Path("/all")
+	@Timed
 	@UnitOfWork
 	public List<TeenyUrl> getAllUrls() {
 		return teenyDAO.findAll();
 	}
+	
+	/**
+	 * Method looks for an TeenyUrl by id.
+	 *
+	 * @param id the id of an TeenyUrl we are looking for.
+	 * @return Optional containing the found TeenyUrl or an empty Optional
+	 * otherwise.
+	 */
+	@GET
+	@Path("/{id}")
+	@UnitOfWork
+	public Optional<TeenyUrl> findById(@PathParam("id") Long id) {
+		return teenyDAO.findById(id);
+	}
+
+//	@POST
+//	@Path("/create")
+//	@UnitOfWork
+//	public Optional<TeenyUrl> createTeenyUrl(@)
 }
