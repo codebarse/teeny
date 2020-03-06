@@ -5,16 +5,12 @@ import com.teeny.dao.TeenyUrlDAO;
 import com.teeny.models.TeenyUrl;
 import com.teeny.resource.ApplicationResource;
 import io.dropwizard.Application;
-import io.dropwizard.db.DataSourceFactory;
+import io.dropwizard.db.PooledDataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
 public class TeenyApplication extends Application<ApplicationConfiguration> {
-
-    public static void main(String[] args) throws Exception {
-        new TeenyApplication().run(args);
-    }
 
     /**
      * Hibernate bundle.
@@ -23,10 +19,14 @@ public class TeenyApplication extends Application<ApplicationConfiguration> {
             = new HibernateBundle<ApplicationConfiguration>(TeenyUrl.class) {
 
         @Override
-        public DataSourceFactory getDataSourceFactory(ApplicationConfiguration applicationConfiguration) {
+        public PooledDataSourceFactory getDataSourceFactory(ApplicationConfiguration applicationConfiguration) {
             return applicationConfiguration.getDataSourceFactory();
         }
     };
+
+    public static void main(String[] args) throws Exception {
+        new TeenyApplication().run(args);
+    }
 
     @Override
     public void initialize(

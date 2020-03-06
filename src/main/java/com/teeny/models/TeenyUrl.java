@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Table(name = "teeny_url")
 @NamedQueries({
         @NamedQuery(name = "com.teeny.models.TeenyUrl.findAll",
-                query = "select id, url from TeenyUrl")
+                query = "select e from TeenyUrl e")
 })
 
 public class TeenyUrl {
