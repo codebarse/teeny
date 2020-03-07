@@ -61,7 +61,6 @@ public class ApplicationResource {
 	@UnitOfWork
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Optional<TeenyUrl> createTeenyUrl(Url url) {
-		System.out.println(url.url);
-		return teenyUrlDAO.findById(1);
+		return teenyUrlDAO.insertUrl(url);
 	}
 }
