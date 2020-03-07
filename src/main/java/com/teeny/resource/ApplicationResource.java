@@ -4,7 +4,6 @@ import com.codahale.metrics.annotation.Timed;
 import com.teeny.application.Saying;
 import com.teeny.dao.TeenyUrlDAO;
 import com.teeny.model.TeenyUrl;
-import com.teeny.model.Url;
 import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.ws.rs.*;
@@ -60,7 +59,8 @@ public class ApplicationResource {
 	@Path("/create")
 	@UnitOfWork
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Optional<TeenyUrl> createTeenyUrl(Url url) {
-		return teenyUrlDAO.insertUrl(url);
+	public Optional<TeenyUrl> createTeenyUrl(TeenyUrl teenyUrl) {
+		System.out.println(teenyUrl.getUrl() + teenyUrl.getId());
+		return teenyUrlDAO.insertUrl(teenyUrl);
 	}
 }

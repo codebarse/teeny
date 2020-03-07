@@ -1,9 +1,7 @@
 package com.teeny.dao;
 
 import com.teeny.model.TeenyUrl;
-import com.teeny.model.Url;
 import io.dropwizard.hibernate.AbstractDAO;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
@@ -11,8 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class TeenyUrlDAO extends AbstractDAO<TeenyUrl> {
-
-	public static Session session;
+	
 	/**
 	 * Constructor.
 	 *
@@ -20,7 +17,6 @@ public class TeenyUrlDAO extends AbstractDAO<TeenyUrl> {
 	 */
 	public TeenyUrlDAO(SessionFactory sessionFactory) {
 		super(sessionFactory);
-//		session = sessionFactory.getCurrentSession();
 	}
 	
 	/**
@@ -43,12 +39,8 @@ public class TeenyUrlDAO extends AbstractDAO<TeenyUrl> {
 		return Optional.of(get(id));
 	}
 	
-	public Optional<TeenyUrl> insertUrl(Url url) {
-
-		TeenyUrl obj = new TeenyUrl(url.url);
-		long id = persist(obj).getId();
-		obj.setId(id);
-		return Optional.of(obj);
+	public Optional<TeenyUrl> insertUrl(TeenyUrl teenyUrl) {
+		return Optional.of(persist(teenyUrl));
 	}
 	
 }

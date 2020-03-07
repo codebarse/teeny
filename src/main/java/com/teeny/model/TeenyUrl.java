@@ -1,6 +1,8 @@
 package com.teeny.model;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @Table(name = "teeny_url")
@@ -8,7 +10,7 @@ import javax.persistence.*;
 		@NamedQuery(name = "com.teeny.model.TeenyUrl.findAll",
 				query = "select e from TeenyUrl e")
 })
-
+@XmlRootElement
 public class TeenyUrl {
 	/**
 	 * Entity's unique identifier.
@@ -19,6 +21,7 @@ public class TeenyUrl {
 	/**
 	 * Complete Url
 	 */
+	@XmlElement
 	@Column(name = "url")
 	private String url;
 	
