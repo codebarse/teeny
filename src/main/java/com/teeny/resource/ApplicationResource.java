@@ -4,12 +4,10 @@ import com.codahale.metrics.annotation.Timed;
 import com.teeny.application.Saying;
 import com.teeny.dao.TeenyUrlDAO;
 import com.teeny.model.TeenyUrl;
+import com.teeny.model.Url;
 import io.dropwizard.hibernate.UnitOfWork;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 import java.util.Optional;
@@ -18,10 +16,10 @@ import java.util.Optional;
 @Produces(MediaType.APPLICATION_JSON)
 public class ApplicationResource {
 	
-	private TeenyUrlDAO teenyDAO;
+	private TeenyUrlDAO teenyUrlDAO;
 	
-	public ApplicationResource(TeenyUrlDAO teenyDAO) {
-		this.teenyDAO = teenyDAO;
+	public ApplicationResource(TeenyUrlDAO teenyUrlDAO) {
+		this.teenyUrlDAO = teenyUrlDAO;
 	}
 	
 	@GET
@@ -41,7 +39,7 @@ public class ApplicationResource {
 	@Timed
 	@UnitOfWork
 	public List<TeenyUrl> getAllUrls() {
-		return teenyDAO.findAll();
+		return teenyUrlDAO.findAll();
 	}
 	
 	/**
@@ -55,11 +53,15 @@ public class ApplicationResource {
 	@Path("/{id}")
 	@UnitOfWork
 	public Optional<TeenyUrl> findById(@PathParam("id") Long id) {
-		return teenyDAO.findById(id);
+		return teenyUrlDAO.findById(id);
 	}
-
-//	@POST
-//	@Path("/create")
-//	@UnitOfWork
-//	public Optional<TeenyUrl> createTeenyUrl(@)
+	
+	@POST
+	@Path("/create")
+	@UnitOfWork
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Optional<TeenyUrl> createTeenyUrl(Url url) {
+		System.out.println(url.url);
+		return teenyUrlDAO.findById(1);
+	}
 }

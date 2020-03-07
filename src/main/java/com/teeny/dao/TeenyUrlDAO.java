@@ -1,6 +1,7 @@
 package com.teeny.dao;
 
 import com.teeny.model.TeenyUrl;
+import com.teeny.model.Url;
 import io.dropwizard.hibernate.AbstractDAO;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -38,5 +39,10 @@ public class TeenyUrlDAO extends AbstractDAO<TeenyUrl> {
 	public Optional<TeenyUrl> findById(long id) {
 		return Optional.of(get(id));
 	}
+	
+//	public Optional<TeenyUrl> insertUrl(Url url) {
+//		Object obj = namedQuery("com.teeny.model.TeenyUrl.insertUrl").setParameter("url", url.url);
+//		return findById(1L);
+//	}
 	
 }
