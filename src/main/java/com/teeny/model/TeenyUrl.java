@@ -8,7 +8,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "teeny_url")
 @NamedQueries({
 		@NamedQuery(name = "com.teeny.model.TeenyUrl.findAll",
-				query = "select e from TeenyUrl e")
+				query = "select e from TeenyUrl e"),
+		@NamedQuery(name = "com.teeny.model.TeenyUrl.findByUrl",
+				query = "select e from TeenyUrl e where url = :url")
 })
 @XmlRootElement
 public class TeenyUrl {

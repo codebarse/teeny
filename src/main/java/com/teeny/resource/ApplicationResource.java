@@ -64,6 +64,16 @@ public class ApplicationResource {
 	@UnitOfWork
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Optional<CreateResponse> createTeenyUrl(CreateRequest request) {
+		//Check if the url is present in DB
+		List<TeenyUrl> byUrl = teenyUrlDAO.findByUrl(request.getUrl());
+		//If the url is in the DB, then use the existing ID to create teenyUrl
+		if(byUrl.size() > 0) {
+			CreateResponse response = new CreateResponse();
+			long id = byUrl.get(0).getId();
+			response.setTeenyUrl(Utils.idToTeenyUrl(id));
+			return Optional.of(response);
+		}
+
 		//Inserting Url in the DB to get a unique ID
 		TeenyUrl dao = new TeenyUrl();
 		dao.setUrl(request.getUrl());
