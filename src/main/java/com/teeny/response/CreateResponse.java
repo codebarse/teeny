@@ -1,4 +1,4 @@
-package com.teeny;
+package com.teeny.response;
 
 public class CreateResponse {
 

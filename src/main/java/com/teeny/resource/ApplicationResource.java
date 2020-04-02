@@ -1,7 +1,7 @@
 package com.teeny.resource;
 
 import com.codahale.metrics.annotation.Timed;
-import com.teeny.CreateResponse;
+import com.teeny.response.CreateResponse;
 import com.teeny.application.Saying;
 import com.teeny.dao.TeenyUrlDAO;
 import com.teeny.model.TeenyUrl;
