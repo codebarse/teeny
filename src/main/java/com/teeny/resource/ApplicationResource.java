@@ -66,4 +66,5 @@ public class ApplicationResource {
 		teenyUrl.setUrl(request.getUrl());
 		return teenyUrlDAO.insertUrl(teenyUrl);
 	}
+
 }
