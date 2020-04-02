@@ -36,7 +36,7 @@ public class TeenyUrlDAO extends AbstractDAO<TeenyUrl> {
 	 * otherwise.
 	 */
 	public Optional<TeenyUrl> findById(long id) {
-		return Optional.of(get(id));
+		return Optional.ofNullable(get(id));
 	}
 	
 	public Optional<TeenyUrl> insertUrl(TeenyUrl teenyUrl) {
