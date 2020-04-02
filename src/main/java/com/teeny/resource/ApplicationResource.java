@@ -1,10 +1,12 @@
 package com.teeny.resource;
 
 import com.codahale.metrics.annotation.Timed;
+import com.teeny.CreateResponse;
 import com.teeny.application.Saying;
 import com.teeny.dao.TeenyUrlDAO;
 import com.teeny.model.TeenyUrl;
 import com.teeny.request.CreateRequest;
+import com.teeny.utils.Utils;
 import io.dropwizard.hibernate.UnitOfWork;
 
 import javax.ws.rs.*;
@@ -43,16 +45,17 @@ public class ApplicationResource {
 	}
 	
 	/**
-	 * Method looks for an TeenyUrl by id.
+	 * Method looks for a TeenyUrl by id.
 	 *
-	 * @param id the id of an TeenyUrl we are looking for.
+	 * @param teenyUrl
 	 * @return Optional containing the found TeenyUrl or an empty Optional
 	 * otherwise.
 	 */
 	@GET
-	@Path("/{id}")
+	@Path("/{teenyUrl}")
 	@UnitOfWork
-	public Optional<TeenyUrl> findById(@PathParam("id") Long id) {
+	public Optional<TeenyUrl> findById(@PathParam("teenyUrl") String teenyUrl) {
+		long id = Utils.teenyUrlToId(teenyUrl);
 		return teenyUrlDAO.findById(id);
 	}
 	
@@ -60,11 +63,18 @@ public class ApplicationResource {
 	@Path("/create")
 	@UnitOfWork
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Optional<TeenyUrl> createTeenyUrl(CreateRequest request) {
-		System.out.println(request.getUrl());
-		TeenyUrl teenyUrl = new TeenyUrl();
-		teenyUrl.setUrl(request.getUrl());
-		return teenyUrlDAO.insertUrl(teenyUrl);
+	public Optional<CreateResponse> createTeenyUrl(CreateRequest request) {
+		//Inserting Url in the DB to get a unique ID
+		TeenyUrl dao = new TeenyUrl();
+		dao.setUrl(request.getUrl());
+		Optional<TeenyUrl> urlWithId = teenyUrlDAO.insertUrl(dao);
+
+		//Converting ID to a teeny encoding and returning
+		long id = urlWithId.get().getId();
+		String teenyUrl = Utils.idToTeenyUrl(id);
+		CreateResponse response = new CreateResponse();
+		response.setTeenyUrl(teenyUrl);
+		return Optional.of(response);
 	}
 
 }
