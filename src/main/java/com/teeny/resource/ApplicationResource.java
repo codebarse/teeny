@@ -64,27 +64,96 @@ public class ApplicationResource {
 	@UnitOfWork
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Optional<CreateResponse> createTeenyUrl(CreateRequest request) {
+
+		//Normal Url shortening
+		if(request.getCustomKey().trim().isEmpty()) {
+			return createNormalTeenyUrl(request);
+		}
+
+		//Url shortening with custom key
+		else {
+			return createCustomTeenyUrl(request);
+		}
+	}
+
+
+	private Optional<CreateResponse> createCustomTeenyUrl(CreateRequest request) {
+
+		//Check if key is present in DB
+		Boolean isKeyAvailable = isKeyAvailable(request.getCustomKey());
+		if(!isKeyAvailable) return null;
+
+		long timestamp = System.currentTimeMillis();
+		//Inserting Url in the DB
+		TeenyUrl dao = new TeenyUrl();
+		dao.setKey(request.getCustomKey());
+		dao.setUrl(request.getUrl());
+		dao.setCreatedOn(timestamp);
+		Optional<TeenyUrl> teenyWithId = teenyUrlDAO.insertTeenyUrl(dao);
+
+		//Return key from success response
+		CreateResponse response = new CreateResponse();
+		response.setTeenyUrl(teenyWithId.get().getKey());
+		return Optional.of(response);
+	}
+
+	private Optional<CreateResponse> createNormalTeenyUrl(CreateRequest request) {
+
 		//Check if the url is present in DB
 		List<TeenyUrl> byUrl = teenyUrlDAO.findByUrl(request.getUrl());
-		//If the url is in the DB, then use the existing ID to create teenyUrl
 		if(byUrl.size() > 0) {
-			CreateResponse response = new CreateResponse();
-			long id = byUrl.get(0).getId();
-			response.setTeenyUrl(Utils.idToTeenyUrl(id));
-			return Optional.of(response);
+
+			//Check whether the teenyurl was not a custom one
+			Boolean isCustomUrl = true;
+			for(TeenyUrl teenyUrl : byUrl) {
+				if(Utils.teenyUrlToId(teenyUrl.getKey()) == teenyUrl.getId())isCustomUrl = false;
+
+				//If it is not a custom Url then reuse the existing key
+				if(!isCustomUrl) {
+					String existingKey = teenyUrl.getKey();
+					CreateResponse response = new CreateResponse();
+					response.setTeenyUrl(existingKey);
+					return Optional.of(response);
+				}
+			}
 		}
 
 		//Inserting Url in the DB to get a unique ID
+		long timestamp = System.currentTimeMillis();
 		TeenyUrl dao = new TeenyUrl();
 		dao.setUrl(request.getUrl());
-		Optional<TeenyUrl> urlWithId = teenyUrlDAO.insertUrl(dao);
+		dao.setCreatedOn(timestamp);
+		Optional<TeenyUrl> urlWithId = teenyUrlDAO.insertTeenyUrl(dao);
 
-		//Converting ID to a teeny encoding and returning
+		//Converting ID to a teeny key
 		long id = urlWithId.get().getId();
 		String teenyUrl = Utils.idToTeenyUrl(id);
+
+		//Persisting teeny key in the DB
+		dao.setKey(teenyUrl);
+		teenyUrlDAO.insertTeenyUrl(dao);
+
 		CreateResponse response = new CreateResponse();
 		response.setTeenyUrl(teenyUrl);
 		return Optional.of(response);
+	}
+
+	/**
+	 * Checks whether a given key is already used in the Database
+	 * @param key
+	 * @return
+	 */
+	@GET
+	@Path("/checkKeyAvailability")
+	@UnitOfWork
+	public Boolean findByKey(@QueryParam("customKey") String key) {
+		return isKeyAvailable(key);
+	}
+
+	private Boolean isKeyAvailable(String key) {
+		key = key.trim();
+		if(key.isEmpty())return false;
+		return teenyUrlDAO.findByKey(key).size() == 0;
 	}
 
 }

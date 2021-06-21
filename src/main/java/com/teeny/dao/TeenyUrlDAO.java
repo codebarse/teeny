@@ -44,6 +44,18 @@ public class TeenyUrlDAO extends AbstractDAO<TeenyUrl> {
 	}
 
 	/**
+	 * Method looks for a TeenyUrl by key.
+	 *
+	 * @param key we are looking for
+	 * @return Optional containing the found TeenyUrl or an empty Optional
+	 * otherwise.
+	 */
+	public List<TeenyUrl> findByKey(String key) {
+		List<TeenyUrl> rows = (List<TeenyUrl>) namedQuery("com.teeny.model.TeenyUrl.findByKey").setParameter("key", key).list();
+		return rows;
+	}
+
+	/**
 	 * Method looks for an TeenyUrl by id.
 	 *
 	 * @param id the id of an TeenyUrl we are looking for.
@@ -54,7 +66,7 @@ public class TeenyUrlDAO extends AbstractDAO<TeenyUrl> {
 		return Optional.ofNullable(get(id));
 	}
 	
-	public Optional<TeenyUrl> insertUrl(TeenyUrl teenyUrl) {
+	public Optional<TeenyUrl> insertTeenyUrl(TeenyUrl teenyUrl) {
 		return Optional.of(persist(teenyUrl));
 	}
 	
