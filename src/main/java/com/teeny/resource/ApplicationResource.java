@@ -9,8 +9,10 @@ import com.teeny.request.CreateRequest;
 import com.teeny.utils.Utils;
 import io.dropwizard.hibernate.UnitOfWork;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,16 +49,21 @@ public class ApplicationResource {
 	/**
 	 * Method looks for a TeenyUrl by id.
 	 *
-	 * @param teenyUrl
-	 * @return Optional containing the found TeenyUrl or an empty Optional
+	 * @param key
+	 * @return Response OK containing the found TeenyUrl or NO_CONTENT
 	 * otherwise.
 	 */
 	@GET
 	@Path("/{teenyUrl}")
 	@UnitOfWork
-	public Optional<TeenyUrl> findById(@PathParam("teenyUrl") String teenyUrl) {
-		long id = Utils.teenyUrlToId(teenyUrl);
-		return teenyUrlDAO.findById(id);
+	public Response findByKey(@PathParam("teenyUrl") String key) {
+		TeenyUrl teenyUrl = teenyUrlDAO.findByKey(key);
+		
+		if(teenyUrl == null) {
+			return Response.status(Response.Status.NO_CONTENT).entity("Invalid URL").build();
+		} else {
+			return Response.status(Response.Status.OK).entity(teenyUrl).build();
+		}
 	}
 	
 	@POST
@@ -146,14 +153,14 @@ public class ApplicationResource {
 	@GET
 	@Path("/checkKeyAvailability")
 	@UnitOfWork
-	public Boolean findByKey(@QueryParam("customKey") String key) {
+	public Boolean checkKeyAvailability(@QueryParam("customKey") String key) {
 		return isKeyAvailable(key);
 	}
 
 	private Boolean isKeyAvailable(String key) {
 		key = key.trim();
 		if(key.isEmpty())return false;
-		return teenyUrlDAO.findByKey(key).size() == 0;
+		return teenyUrlDAO.findByKey(key) == null;
 	}
 
 }

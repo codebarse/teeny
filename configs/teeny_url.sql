@@ -31,7 +31,7 @@ CREATE TABLE `teeny_url` (
 INSERT INTO `teeny_url` (`id`, `teenyKey`, `url`, `created_on`) VALUES
 ('1', 'b', 'http://www.cricbuzz.com', '1624313580366'),
 ('2', 'c', 'http://www.google.com', '1624313609163'),
-('3', 'piss', 'http://www.pulkitisapussy.com', '1624313632268'),
+('3', 'piss', 'http://www.safalisapussy.com', '1624313632268'),
 ('4', 'rand', 'http://www.random.com', '1624313690903');
 
 

@@ -50,9 +50,12 @@ public class TeenyUrlDAO extends AbstractDAO<TeenyUrl> {
 	 * @return Optional containing the found TeenyUrl or an empty Optional
 	 * otherwise.
 	 */
-	public List<TeenyUrl> findByKey(String key) {
+	public TeenyUrl findByKey(String key) {
 		List<TeenyUrl> rows = (List<TeenyUrl>) namedQuery("com.teeny.model.TeenyUrl.findByKey").setParameter("key", key).list();
-		return rows;
+		if(rows.isEmpty()) {
+			return null;
+		}
+		return rows.get(0);
 	}
 
 	/**
