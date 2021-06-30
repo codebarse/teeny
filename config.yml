@@ -1,10 +1,32 @@
-# Database settings.
-database:
-  # the name of the JDBC driver, mysql in our case
-  driverClass: com.mysql.jdbc.Driver
-  # the username
-  user: root
-  # the password
-  password: ''
-  # the JDBC URL; the database is called teeny
-  url: jdbc:mysql://localhost:3306/teeny
+  # Database settings.
+  database:
+    # the name of the JDBC driver, mysql in our case
+    driverClass: org.postgresql.Driver
+    # the username
+    user: root
+    # the password
+    password: ''
+    # the JDBC URL; the database is called teeny
+    url: jdbc:postgresql://localhost:5432/teeny
+
+
+  # Logging settings.
+  logging:
+
+    # The default level of all loggers. Can be OFF, ERROR, WARN, INFO, DEBUG, TRACE, or ALL.
+    level: DEBUG
+    appenders:
+      - type: file
+        # The file to which current statements will be logged.
+
+        currentLogFilename: /logs/teeny/log.log
+        # When the log file rotates, the archived log will be renamed to this and gzipped. The
+        # %d is replaced with the previous day (yyyy-MM-dd). Custom rolling windows can be created
+        # by passing a SimpleDateFormat-compatible format as an argument: "%d{yyyy-MM-dd-hh}".
+        archivedLogFilenamePattern: /logs/teeny/log-%d.log.gz
+
+        # The number of archived files to keep.
+        archivedFileCount: 5
+
+        # The timezone used to format dates. HINT: USE THE DEFAULT, UTC.
+        timeZone: UTC
